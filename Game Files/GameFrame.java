@@ -5,11 +5,6 @@
  */
 
 
-/* GameFrame class establishes the frame (window) for the game
-It is a child of JFrame because JFrame manages frames
-Runs the constructor in GamePanel class
-
-*/ 
 import java.awt.*;
 import javax.swing.*;
 

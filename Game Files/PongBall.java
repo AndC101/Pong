@@ -4,12 +4,6 @@
  * Description: defines behaviours for the pong ball  
 */
 
-/* PlayerBall class defines behaviours for the pong ball  
-
-child of Rectangle because that makes it easy to draw and check for collision
-
-In 2D GUI, basically everything is a rectangle even if it doesn't look like it!
-*/ 
 import java.awt.*;
 
 import javax.swing.ImageIcon;

@@ -5,12 +5,6 @@
  * Description: describes a paddle and it's properties and functions 
 */
 
-
-/*
- *  Paddle class describes a paddle
- * 
- */
-
 import java.awt.*;
 import java.awt.event.*;
 
@@ -20,6 +14,7 @@ public class Paddle extends Rectangle {
 
 	public int yVelocity;
 	public final int SPEED = 8; // movement speed of paddles
+
 	public static final int PADDLE_WIDTH = 25; //25 with baguette
 	public static final int PADDLE_LENGTH = 165;
 	public Image bread;
@@ -29,7 +24,7 @@ public class Paddle extends Rectangle {
 		super(x, y, PADDLE_WIDTH, PADDLE_LENGTH);
 	}
 
-	// called from GamePanel wh  en any keyboard input is detected
+	// called from GamePanel when any keyboard input is detected
 	// updates the direction of the ball based on user input
 	// if the keyboard input isn't any of the options (d, a, w, s), then nothing
 	// happens
