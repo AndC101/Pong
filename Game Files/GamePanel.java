@@ -4,15 +4,6 @@
  * Description: "Game loop" -- runs the game and calls what needs to be called
 */ 
 
-/* GamePanel class acts as the main "game loop" - continuously runs the game and calls whatever needs to be called
-
-Child of JPanel because JPanel contains methods for drawing to the screen
-
-Implements KeyListener interface to listen for keyboard input
-
-Implements Runnable interface to use "threading" - let the game do two things at once
-
-*/
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -28,7 +19,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// dimensions of window
 	public static final int GAME_WIDTH = 1200;
-	public static final int GAME_HEIGHT = 750;
+	public static final int GAME_HEIGHT = 600;
 
 	//scores for the players
 	public int leftScore = 0;
@@ -47,7 +38,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public Image image;
 	public Graphics graphics;
 	public PongBall ball;
-	public int ySpeedCap = 13;
+
 	//paddles and vertical divider
 	public Paddle leftPad;
 	public Paddle rightPad;
@@ -68,22 +59,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 
-		// make this class run at the same time as other classes (without this each
-		// class would "pause" while another class runs). By using threading we can
-		// remove lag, and also allows us to do features like display timers in real
-		// time!
+		// make this class run at the same time as other classes
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
 
-	// paint is a method in java.awt library that we are overriding. It is a special
-	// method - it is called automatically in the background in order to update what
-	// appears in the window. You NEVER call paint() yourself
 	public void paint(Graphics g) {
-		// we are using "double buffering here" - if we draw images directly onto the
-		// screen, it takes time and the human eye can actually notice flashes of lag as
-		// each pixel on the screen is drawn one at a time. Instead, we are going to
-		// draw images OFF the screen, then simply move the image on screen as needed.
+		//double buffering
 		image = createImage(GAME_WIDTH, GAME_HEIGHT); // draw off screen
 		graphics = image.getGraphics();
 		draw(graphics);
@@ -122,12 +104,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			g.drawString("S - DOWN", 200, 320);
 
 			g.drawString("Right Controls:", 700, 180);
-			g.drawString("^ - UP", 700, 250);
+			g.drawString("Up arrow - UP", 700, 250);
 			g.drawString("Down arrow - DOWN", 700, 320);
 
-			g.drawString("First to 5 points wins.", 290, 450);
+			g.drawString("First to 5 points wins.", 290, 420);
 
-			g.drawString("ENTER to play!", 290, 600);
+			g.drawString("ENTER to play!", 290, 520);
 
 		}
 
@@ -157,9 +139,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	// call the move methods in other classes to update positions
-	// this method is constantly called from run(). By doing this, movements appear
-	// fluid and natural. If we take this out the movements appear sluggish and
-	// laggy
 	public void move() {
 		ball.move();
 		leftPad.move();
@@ -186,20 +165,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		}
 
 		// forces paddles to remain on screen
-		if (leftPad.y <= roundMargin) {
-			leftPad.y = roundMargin;
+		if (leftPad.y <= roundMargin + 10) {
+			leftPad.y = roundMargin + 10;
 		}
 
-		if (leftPad.y >= GAME_HEIGHT - leftPad.height - roundMargin) {
-			leftPad.y = GAME_HEIGHT - leftPad.height - roundMargin;
+		if (leftPad.y >= GAME_HEIGHT - leftPad.height - roundMargin - 10) {
+			leftPad.y = GAME_HEIGHT - leftPad.height - roundMargin - 10;
 		}
 
-		if (rightPad.y <= roundMargin) {
-			rightPad.y = roundMargin;
+		if (rightPad.y <= roundMargin + 10) {
+			rightPad.y = roundMargin + 10;
 		}
 
-		if (rightPad.y >= GAME_HEIGHT - rightPad.height - roundMargin) {
-			rightPad.y = GAME_HEIGHT - rightPad.height - roundMargin;
+		if (rightPad.y >= GAME_HEIGHT - rightPad.height - roundMargin - 10) {
+			rightPad.y = GAME_HEIGHT - rightPad.height - roundMargin - 10;
 		}
 		
 		
@@ -210,14 +189,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			//make ball bounce off and add the y vel
 			ball.xVelocity = Math.abs(ball.xVelocity);
 			
-			//sets a speed cap at 13
-			if(leftPad.yVelocity+ball.yVelocity > 0) {
-				ball.yVelocity = Math.max(leftPad.yVelocity+ball.yVelocity, ySpeedCap);
-			} else if (leftPad.yVelocity+ball.yVelocity < 0) {
-				ball.yVelocity = Math.max(leftPad.yVelocity+ball.yVelocity, -ySpeedCap);
-			} else {
-				ball.yVelocity = 0;
-			}
+			ball.yVelocity = (leftPad.yVelocity/2)+ball.yVelocity;
 			
 
 			
@@ -275,14 +247,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			//make ball bounce off and add the y vel
 			ball.xVelocity = -Math.abs(ball.xVelocity);
 			
-			//sets a speed cap at 13
-			if(rightPad.yVelocity+ball.yVelocity > 0) {
-				ball.yVelocity = Math.max(rightPad.yVelocity+ball.yVelocity, ySpeedCap);
-			} else if (rightPad.yVelocity+ball.yVelocity < 0) {
-				ball.yVelocity = Math.max(rightPad.yVelocity+ball.yVelocity, -ySpeedCap);
-			} else {
-				ball.yVelocity = 0;
-			}
+			ball.yVelocity = (rightPad.yVelocity/2)+ball.yVelocity;
 
 			//randomly add or sub 1px to make prevent endless loops
 			random = Math.random();
@@ -348,12 +313,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	}
 
-	// run() method is what makes the game continue running without end. It calls
-	// other methods to move objects, check for collision, and update the screen
 	public void run() {
-		// the CPU runs our game code too quickly - we need to slow it down! The
-		// following lines of code "force" the computer to get stuck in a loop for short
-		// intervals between calling other methods to update the screen.
 		long lastTime = System.nanoTime();
 		double amountOfTicks = 60;
 		double ns = 1000000000 / amountOfTicks;
